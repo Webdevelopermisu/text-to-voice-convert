@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="con">
+        <header>Conbart text to voice</header>
+        <form class="" action="#" method="post">
+            <div class="box">
+                <label>Type Text</label>
+                <textarea placeholder="Type some text..."></textarea>
+            </div>
+            <div class="box">
+                <label>Select Voice Language</label>
+                <div class="voices">
+                    <select name="" class="">
+
+                    </select>
+                </div>
+            </div>
+            <button type="button" name="button">Conbert To Voice</button>
+        </form>
+    </div>
+</body>
+<script> 
+    const textarea = document.querySelector("textarea"),
+    voiceList = document.querySelector("select"),
+    speecBtn = document.querySelector("button");
+
+    let synth = speechSynthesis,
+    isSpeaking = true;
+
+    voices();
+
+    function voices() {
+        for (let voice of synth.getVoices()) {
+            let selected = voice.name === "Google US English" ? "selected" : "";
+            let option = `<option value="${voice.name}"${selected}>${voice.name} (${voice.lang})</option>`;
+            voiceList.insertAdjacentHTML("beforeend",option);
+        }
+    }
+    synth.addEventListener("voiceschanged",voices);
+    function textToSpeech(text) {
+        let utterance = new SpeechSynthesisUtterance(text);
+        for (let voice of synth.getVoices()) {
+            if (voice.name === voiceList.value) {
+                utterance.voice = voice ;
+            }
+            
+        }
+        synth.speak(utterance);
+    }
+        speecBtn.addEventListener("click",e =>{
+        e.preventDefault();
+        if (textarea.value !== "") {
+            if (!synth.speaking) {
+            textToSpeech(textarea.value);
+        }else{
+            speecBtn.innerText = "Convert To Voice"
+        }
+        }
+    })
+    
+
+</script>
+</html>
